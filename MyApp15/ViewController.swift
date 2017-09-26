@@ -11,6 +11,8 @@ import UIKit
 class ViewController: UIViewController {
     private var q1 = DispatchQueue(label: "tw.org.iii.queue.q1", qos: DispatchQoS.background, attributes: DispatchQueue.Attributes.concurrent)
     
+    private let fmgr = FileManager.default
+    
     @IBOutlet weak var imgView: UIImageView!
     
     @IBAction func doTest1(_ sender: Any) {
@@ -111,8 +113,8 @@ class ViewController: UIViewController {
         
         do{
             let data = try Data(contentsOf: url!)
-            let cont = String(data: data, encoding: String.Encoding.utf8)
-            print(cont!)
+//            let cont = String(data: data, encoding: String.Encoding.utf8)
+//            print(cont!)
             
             if let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments){
                 // json is-a Any
@@ -122,13 +124,39 @@ class ViewController: UIViewController {
                     print("\(row["Name"]!) : \(row["Tel"]!)")
                 }
             }
-            
-            
-            
-            
         }catch{
             
         }
+    }
+    
+    
+    @IBAction func doTest7(_ sender: Any) {
+        let url = URL(string: "http://pdfmyurl.com/?url=http://www.gamer.com.tw")   // return URL?
+        
+        let config = URLSessionConfiguration.default
+        let session = URLSession(configuration: config)
+        
+        // 以下為一個任務
+        let task = session.downloadTask(with: url!) {
+            (url, response, error) in
+            guard error == nil else{return}
+            
+            do{
+                let targetURL = URL(fileURLWithPath: NSHomeDirectory() + "/Documents/brad.pdf")
+                try self.fmgr.copyItem(at: url!, to: targetURL)
+                print("download success")
+            }catch{
+                print("copy failure")
+            }
+                
+        }
+        task.resume()
+        
+        
+        
+        
+        
+        
     }
     
     override func viewDidLoad() {
