@@ -60,6 +60,7 @@ class ViewController: UIViewController {
         }
     }
     
+    //Session dataTask
     @IBAction func doTest4(_ sender: Any) {
         let url = URL(string: "http://www.pchome.com.tw")
         
@@ -80,11 +81,56 @@ class ViewController: UIViewController {
         
     }
     
+    // Session downloadTask
     @IBAction func doTest5(_ sender: Any) {
+        let url = URL(string: "http://www.iii.org.tw")
         
+        let config = URLSessionConfiguration.default
+        let session = URLSession(configuration: config)
         
+        let task = session.downloadTask(with: url!) {
+            (url2, response, error) in
+            print("----------")
+            print(url2!)
+            do{
+                let cont = try String(contentsOf: url2!)
+                print("----------")
+                print(cont)
+            }catch{
+                
+            }
+            
+            
+        }
+        task.resume()
         
     }
+    
+    @IBAction func doTest6(_ sender: Any) {
+        let url = URL(string: "http://data.coa.gov.tw/Service/OpenData/ODwsv/ODwsvAttractions.aspx")
+        
+        do{
+            let data = try Data(contentsOf: url!)
+            let cont = String(data: data, encoding: String.Encoding.utf8)
+            print(cont!)
+            
+            if let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments){
+                // json is-a Any
+                // json as! [[String:String]] => because Data Source
+                for row in json as! [[String:String]] {
+                    // row => [String:String]
+                    print("\(row["Name"]!) : \(row["Tel"]!)")
+                }
+            }
+            
+            
+            
+            
+        }catch{
+            
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
