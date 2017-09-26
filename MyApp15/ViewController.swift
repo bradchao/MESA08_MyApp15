@@ -60,9 +60,35 @@ class ViewController: UIViewController {
         }
     }
     
+    @IBAction func doTest4(_ sender: Any) {
+        let url = URL(string: "http://www.pchome.com.tw")
+        
+//        let config = URLSessionConfiguration.default    // 存 Cache
+        let config = URLSessionConfiguration.ephemeral  // 不存 Cache
+
+        let session = URLSession(configuration: config)
+        let task = session.dataTask(with: url!) {
+            (data, response, error) in
+            
+            guard error == nil else {return}
+            
+            if let cont = String(data: data!, encoding: String.Encoding.utf8){
+                print(cont)
+            }
+        }
+        task.resume()
+        
+    }
     
+    @IBAction func doTest5(_ sender: Any) {
+        
+        
+        
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        print(NSHomeDirectory())
     }
 
 }
